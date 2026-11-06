@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم والإدارة</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>لوحة إدارة المنصة التعليمية - كلية الإعلام</h1>
+
+    <div class="admin-grid">
+        <!-- إضافة طالب -->
+        <div class="card">
+            <h3>إضافة طالب جديد</h3>
+            <input type="text" id="newStudentName" placeholder="اسم الطالب">
+            <input type="text" id="newStudentPhone" placeholder="رقم الهاتف">
+            <input type="email" id="newStudentEmail" placeholder="البريد الإلكتروني">
+            <select id="newStudentGrade">
+                <option value="الأولى">الفرقة الأولى</option>
+                <option value="الثانية">الفرقة الثانية</option>
+                <option value="الثالثة">الفرقة الثالثة</option>
+                <option value="الرابعة">الفرقة الرابعة</option>
+            </select>
+            <button onclick="createStudentAccount()">إنشاء الحساب وتوليد الكود</button>
+        </div>
+
+        <!-- إعدادات الحضور والغياب بالنطاق الجغرافي -->
+        <div class="card">
+            <h3>إدارة إعدادات الجلسة للحضور (GPS)</h3>
+            <input type="text" id="geoSubject" placeholder="اسم المادة">
+            <input type="text" id="geoSecret" placeholder="الكود السري">
+            <input type="text" id="geoLat" placeholder="خط العرض (Latitude) مثلاً: 30.0444">
+            <input type="text" id="geoLng" placeholder="خط الطول (Longitude) مثلاً: 31.2357">
+            <input type="number" id="geoRadius" placeholder="أقصى مسافة بالسماح (بالمتر) مثلاً: 100">
+            <button onclick="saveAttendanceSettings()">حفظ وتفعيل الجلسة</button>
+        </div>
+
+        <!-- رفع الكتب والتنبيهات -->
+        <div class="card">
+            <h3>رفع الكتب والتنبيهات</h3>
+            <input type="text" id="bookTitle" placeholder="عنوان الكتاب أو التنبيه">
+            <input type="text" id="bookLink" placeholder="رابط الملف (Google Drive/PDF)">
+            <button onclick="uploadResource()">نشر لكل الطلاب</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
