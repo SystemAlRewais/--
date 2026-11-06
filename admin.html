@@ -2,18 +2,27 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة الإدارة والتحكم الكامل - كلية الإعلام</title>
+    <title>لوحة الإدارة الشاملة - كلية الإعلام</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="navbar">
         <h2>لوحة التحكم المركزية - الإدارة</h2>
-        <button onclick="window.location.href='index.html'">تسجيل خروج الأدمن</button>
+        <button onclick="window.location.href='index.html'">تسجيل خروج</button>
     </header>
 
-    <div class="admin-grid">
+    <div class="app-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px;">
         <div class="card">
-            <h3>إنشاء حساب طالب جديد وتوليد كود وباسورد</h3>
+            <h3>⚙️ تخصيص المنصة بالكامل</h3>
+            <input type="text" id="adminSiteTitle" placeholder="عنوان المنصة الرئيسي">
+            <input type="text" id="adminPrimaryColor" placeholder="لون الأزرار الرئيسي (مثال: #0284c7)">
+            <input type="text" id="adminAcademicYear" placeholder="العام الدراسي الحالي (مثال: 2026/2027)">
+            <input type="text" id="adminDevelopers" placeholder="أسماء المطورين (أحمد سمير | عمار منصور)">
+            <button onclick="saveSiteSettings()">حفظ التعديلات وتطبيقها فوراً</button>
+        </div>
+
+        <div class="card">
+            <h3>👥 إضافة طالب جديد وتوليد بياناته</h3>
             <input type="text" id="newName" placeholder="اسم الطالب الرباعي">
             <input type="text" id="newPhone" placeholder="رقم الهاتف">
             <select id="newGrade">
@@ -26,25 +35,18 @@
         </div>
 
         <div class="card">
-            <h3>إعدادات حضور المحاضرات (GPS والمدى بالمتر)</h3>
+            <h3>📍 إعدادات حضور المحاضرات (GPS والمتر)</h3>
             <input type="text" id="setSubject" placeholder="اسم المادة">
             <input type="text" id="setSecret" placeholder="الكود السري للتسجيل">
             <input type="text" id="setLat" placeholder="خط العرض للكلية (Latitude)">
             <input type="text" id="setLng" placeholder="خط الطول للكلية (Longitude)">
-            <input type="number" id="setMaxMeters" placeholder="أقصى مسافة بالسماح (مثال: 100 متر)">
-            <button onclick="saveGeoSettings()">حفظ وتفعيل جلسة الحضور</button>
-        </div>
-
-        <div class="card">
-            <h3>رفع الكتب أو إرسال تنبيه عاجل للطلاب</h3>
-            <input type="text" id="noticeTitle" placeholder="عنوان التنبيه أو اسم الكتاب">
-            <textarea id="noticeMsg" placeholder="نص التنبيه أو رابط تحميل الكتاب السحابي"></textarea>
-            <button onclick="publishNotice()">نشر فوري للطلاب</button>
+            <input type="number" id="setMaxMeters" placeholder="أقصى مسافة بالسماح (متر)">
+            <button onclick="saveGeoSettings()">تفعيل جلسة الحضور</button>
         </div>
 
         <div class="card" style="grid-column: span 1 / -1;">
-            <h3>سجل الطلاب بالكامل (إدارة النشاط، الحظر، والتعديل)</h3>
-            <button onclick="loadStudentsList()" style="width: auto; padding: 10px 20px; margin-bottom: 15px;">تحديث جدول الطلاب السحابي</button>
+            <h3>📋 سجل الطلاب الكامل (النشاط، الحظر، والتعديل)</h3>
+            <button onclick="loadStudentsList()" style="width: auto; padding: 8px 16px; margin-bottom: 10px;">تحديث بيانات الطلاب</button>
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
@@ -55,11 +57,11 @@
                             <th>الفرقة</th>
                             <th>الحالة</th>
                             <th>آخر دخول</th>
-                            <th>إجراءات التحكم</th>
+                            <th>إجراءات الحظر</th>
                         </tr>
                     </thead>
                     <tbody id="studentsTableBody">
-                        <tr><td colspan="7" style="text-align: center;">اضغط على زر التحديث لجلب بيانات الطلاب من السحابة</td></tr>
+                        <tr><td colspan="7" style="text-align:center;">اضغط تحديث لجلب البيانات من السحابة</td></tr>
                     </tbody>
                 </table>
             </div>
