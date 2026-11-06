@@ -2,47 +2,73 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة التحكم والإدارة</title>
+    <title>لوحة الإدارة والتحكم الكامل - كلية الإعلام</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>لوحة إدارة المنصة التعليمية - كلية الإعلام</h1>
+    <header class="navbar">
+        <h2>لوحة التحكم المركزية - الإدارة</h2>
+        <button onclick="window.location.href='index.html'">تسجيل خروج الأدمن</button>
+    </header>
 
     <div class="admin-grid">
-        <!-- إضافة طالب -->
         <div class="card">
-            <h3>إضافة طالب جديد</h3>
-            <input type="text" id="newStudentName" placeholder="اسم الطالب">
-            <input type="text" id="newStudentPhone" placeholder="رقم الهاتف">
-            <input type="email" id="newStudentEmail" placeholder="البريد الإلكتروني">
-            <select id="newStudentGrade">
-                <option value="الأولى">الفرقة الأولى</option>
-                <option value="الثانية">الفرقة الثانية</option>
-                <option value="الثالثة">الفرقة الثالثة</option>
-                <option value="الرابعة">الفرقة الرابعة</option>
+            <h3>إنشاء حساب طالب جديد وتوليد كود وباسورد</h3>
+            <input type="text" id="newName" placeholder="اسم الطالب الرباعي">
+            <input type="text" id="newPhone" placeholder="رقم الهاتف">
+            <select id="newGrade">
+                <option value="الفرقة الأولى">الفرقة الأولى</option>
+                <option value="الفرقة الثانية">الفرقة الثانية</option>
+                <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                <option value="الفرقة الرابعة">الفرقة الرابعة</option>
             </select>
-            <button onclick="createStudentAccount()">إنشاء الحساب وتوليد الكود</button>
+            <button onclick="createStudent()">إنشاء الحساب آلياً</button>
         </div>
 
-        <!-- إعدادات الحضور والغياب بالنطاق الجغرافي -->
         <div class="card">
-            <h3>إدارة إعدادات الجلسة للحضور (GPS)</h3>
-            <input type="text" id="geoSubject" placeholder="اسم المادة">
-            <input type="text" id="geoSecret" placeholder="الكود السري">
-            <input type="text" id="geoLat" placeholder="خط العرض (Latitude) مثلاً: 30.0444">
-            <input type="text" id="geoLng" placeholder="خط الطول (Longitude) مثلاً: 31.2357">
-            <input type="number" id="geoRadius" placeholder="أقصى مسافة بالسماح (بالمتر) مثلاً: 100">
-            <button onclick="saveAttendanceSettings()">حفظ وتفعيل الجلسة</button>
+            <h3>إعدادات حضور المحاضرات (GPS والمدى بالمتر)</h3>
+            <input type="text" id="setSubject" placeholder="اسم المادة">
+            <input type="text" id="setSecret" placeholder="الكود السري للتسجيل">
+            <input type="text" id="setLat" placeholder="خط العرض للكلية (Latitude)">
+            <input type="text" id="setLng" placeholder="خط الطول للكلية (Longitude)">
+            <input type="number" id="setMaxMeters" placeholder="أقصى مسافة بالسماح (مثال: 100 متر)">
+            <button onclick="saveGeoSettings()">حفظ وتفعيل جلسة الحضور</button>
         </div>
 
-        <!-- رفع الكتب والتنبيهات -->
         <div class="card">
-            <h3>رفع الكتب والتنبيهات</h3>
-            <input type="text" id="bookTitle" placeholder="عنوان الكتاب أو التنبيه">
-            <input type="text" id="bookLink" placeholder="رابط الملف (Google Drive/PDF)">
-            <button onclick="uploadResource()">نشر لكل الطلاب</button>
+            <h3>رفع الكتب أو إرسال تنبيه عاجل للطلاب</h3>
+            <input type="text" id="noticeTitle" placeholder="عنوان التنبيه أو اسم الكتاب">
+            <textarea id="noticeMsg" placeholder="نص التنبيه أو رابط تحميل الكتاب السحابي"></textarea>
+            <button onclick="publishNotice()">نشر فوري للطلاب</button>
+        </div>
+
+        <div class="card" style="grid-column: span 1 / -1;">
+            <h3>سجل الطلاب بالكامل (إدارة النشاط، الحظر، والتعديل)</h3>
+            <button onclick="loadStudentsList()" style="width: auto; padding: 10px 20px; margin-bottom: 15px;">تحديث جدول الطلاب السحابي</button>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الكود</th>
+                            <th>الاسم</th>
+                            <th>الهاتف</th>
+                            <th>الفرقة</th>
+                            <th>الحالة</th>
+                            <th>آخر دخول</th>
+                            <th>إجراءات التحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <tr><td colspan="7" style="text-align: center;">اضغط على زر التحديث لجلب بيانات الطلاب من السحابة</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <footer>
+        <p>تم التنفيذ والتطوير بواسطة: <span class="developers">(أحمد سمير) &nbsp;|&nbsp; (عمار منصور)</span></p>
+    </footer>
 
     <script src="app.js"></script>
 </body>
