@@ -10,9 +10,12 @@ function doPost(e) {
   if (action === "addStudent") return addStudent(data.student);
   if (action === "getStudents") return getStudents();
   if (action === "banStudent") return banStudent(data.code, data.status);
+  if (action === "saveSettings") return saveSettings(data.settings);
+  if (action === "getSettings") return getSettings();
   if (action === "saveAttendanceSettings") return saveAttendanceSettings(data.settings);
   if (action === "registerAttendance") return registerAttendance(data.attendance);
-  if (action === "sendNotice") return sendNotice(data.notice);
+  if (action === "getPosts") return getPosts();
+  if (action === "addPost") return addPost(data.post);
   if (action === "sendComplaint") return sendComplaint(data.complaint);
   
   return responseJSON({ status: "error", message: "طلب غير معروف" });
@@ -24,22 +27,8 @@ function responseJSON(data) {
 }
 
 function checkLogin(code, pass) {
-  // الحساب التجريبي السريع المباشر الذي طلبته
-  if (code === "admin" && pass === "5656") {
-    return responseJSON({
-      status: "success",
-      student: {
-        code: "admin",
-        name: "طالب تجريبي (أحمد عمار)",
-        phone: "01000000000",
-        grade: "الفرقة الرابعة - كلية الإعلام",
-        status: "نشط"
-      }
-    });
-  }
-
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Students");
-  if (!sheet) return responseJSON({ status: "error", message: "تأكد من إنشاء تبويب Students في شيت جوجل" });
+  if (!sheet) return responseJSON({ status: "error", message: "تأكد من إنشاء تبويب Students" });
   
   var rows = sheet.getDataRange().getValues();
   for (var i = 1; i < rows.length; i++) {
@@ -50,7 +39,7 @@ function checkLogin(code, pass) {
       return responseJSON({ status: "success", student: { code: rows[i][0], name: rows[i][1], phone: rows[i][2], grade: rows[i][3], status: rows[i][5] } });
     }
   }
-  return responseJSON({ status: "error", message: "بيانات الدخول غير صحيحة" });
+  return responseJSON({ status: "error", message: "بيانات الدخول غير صحيحة أو غير مسجلة" });
 }
 
 function addStudent(st) {
@@ -81,10 +70,36 @@ function banStudent(code, status) {
   return responseJSON({ status: "error", message: "الطالب غير موجود" });
 }
 
+function saveSettings(s) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SiteSettings");
+  if (!sheet) {
+    sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("SiteSettings");
+    sheet.appendRow(["Key", "Value"]);
+  }
+  sheet.clear();
+  sheet.appendRow(["Key", "Value"]);
+  sheet.appendRow(["siteTitle", s.siteTitle]);
+  sheet.appendRow(["primaryColor", s.primaryColor]);
+  sheet.appendRow(["academicYear", s.academicYear]);
+  sheet.appendRow(["developers", s.developers]);
+  return responseJSON({ status: "success", message: "تم تحديث إعدادات المنصة بنجاح" });
+}
+
+function getSettings() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SiteSettings");
+  if (!sheet) return responseJSON({ status: "success", settings: {} });
+  var rows = sheet.getDataRange().getValues();
+  var settings = {};
+  for (var i = 1; i < rows.length; i++) {
+    settings[rows[i][0]] = rows[i][1];
+  }
+  return responseJSON({ status: "success", settings: settings });
+}
+
 function saveAttendanceSettings(s) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Settings");
   sheet.appendRow([s.subject, s.secret, s.lat, s.lng, s.radius, new Date()]);
-  return responseJSON({ status: "success", message: "تم حفظ إعدادات المحاضرة بنجاح" });
+  return responseJSON({ status: "success", message: "تم حفظ إعدادات الحضور" });
 }
 
 function registerAttendance(att) {
@@ -93,14 +108,29 @@ function registerAttendance(att) {
   return responseJSON({ status: "success", message: "تم تسجيل الحضور بنجاح" });
 }
 
-function sendNotice(n) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Notices");
-  sheet.appendRow([new Date(), n.title, n.message]);
-  return responseJSON({ status: "success", message: "تم إرسال التنبيه للطلاب" });
+function getPosts() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Community");
+  if (!sheet) return responseJSON({ status: "success", posts: [] });
+  var rows = sheet.getDataRange().getValues();
+  var posts = [];
+  for (var i = 1; i < rows.length; i++) {
+    posts.push({ author: rows[i][0], text: rows[i][1], date: rows[i][2] });
+  }
+  return responseJSON({ status: "success", posts: posts.reverse() });
+}
+
+function addPost(p) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Community");
+  if (!sheet) {
+    sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Community");
+    sheet.appendRow(["Author", "Text", "Date"]);
+  }
+  sheet.appendRow([p.author, p.text, new Date()]);
+  return responseJSON({ status: "success", message: "تم نشر المنشور في المنتدى" });
 }
 
 function sendComplaint(c) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Complaints");
   sheet.appendRow([new Date(), c.code, c.name, c.text]);
-  return responseJSON({ status: "success", message: "تم إرسال الشكوى للإدارة بنجاح" });
+  return responseJSON({ status: "success", message: "تم إرسال شكواك للإدارة" });
 }
