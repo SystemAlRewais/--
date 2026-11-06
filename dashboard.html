@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>صفحة الطالب - منصة كلية الإعلام</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div id="studentInfo">
+            <h3 id="displayName">اسم الطالب</h3>
+            <p>الكود: <span id="displayCode"></span> | الفرقة: <span id="displayGrade"></span></p>
+        </div>
+        <button onclick="logout()">تسجيل الخروج</button>
+    </header>
+
+    <div class="main-content">
+        <div class="card">
+            <h3>📚 المقررات الدراسية</h3>
+            <div id="coursesList">جاري تحميل المقررات...</div>
+        </div>
+
+        <div class="card">
+            <h3>📍 تسجيل الحضور والغياب (GPS)</h3>
+            <select id="subjectSelect">
+                <option value="نشأة الإعلام">نشأة الإعلام</option>
+                <option value="الصحافة الإلكترونية">الصحافة الإلكترونية</option>
+            </select>
+            <input type="text" id="secretCode" placeholder="رمز التسجيل السري للمحاضرة">
+            <button onclick="registerAttendanceGPS()">تسجيل الحضور الآن</button>
+        </div>
+
+        <div class="card">
+            <h3>🗓️ الجدول الدراسي والامتحانات</h3>
+            <div id="schedules">سيرفع الأدمن جدول فرقتك هنا.</div>
+        </div>
+
+        <div class="card">
+            <h3>💬 منتديات النقاش والشكاوى</h3>
+            <textarea id="complaintText" placeholder="اكتب استفسارك أو شكواك هنا..."></textarea>
+            <button onclick="sendComplaint()">إرسال للإدارة</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
