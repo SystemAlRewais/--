@@ -19,14 +19,6 @@ function handleStudentLogin(e) {
     const code = document.getElementById('studentCode').value.trim();
     const pass = document.getElementById('studentPass').value.trim();
 
-    // التحقق المحلي الفوري للحساب التجريبي الذي طلبته
-    if (code === "admin" && pass === "5656") {
-        const testStudent = { code: "admin", name: "طالب تجريبي (أحمد عمار)", phone: "01000000000", grade: "الفرقة الرابعة", status: "نشط" };
-        localStorage.setItem('user', JSON.stringify(testStudent));
-        window.location.href = 'dashboard.html';
-        return;
-    }
-
     fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'login', code: code, password: pass })
@@ -52,7 +44,6 @@ function handleAdminLogin(e) {
     }
 }
 
-// إذا كان الطالب في صفحة الظهر يتم جلب بياناته وعرضها
 window.onload = function() {
     if (window.location.pathname.includes('dashboard.html')) {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -60,6 +51,7 @@ window.onload = function() {
             document.getElementById('displayName').innerText = user.name;
             document.getElementById('displayCode').innerText = user.code;
             document.getElementById('displayGrade').innerText = user.grade;
+            loadCommunityPosts();
         } else {
             window.location.href = 'index.html';
         }
@@ -68,6 +60,58 @@ window.onload = function() {
         loadStudentsList();
     }
 };
+
+function toggleChatbot() {
+    const modal = document.getElementById('chatbotModal');
+    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function submitChatbotComplaint() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const text = document.getElementById('botComplaintText').value;
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'sendComplaint', complaint: { code: user.code, name: user.name, text } })
+    }).then(res => res.json()).then(data => {
+        alert(data.message);
+        document.getElementById('botComplaintText').value = '';
+        toggleChatbot();
+    });
+}
+
+function publishPost() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const text = document.getElementById('postText').value;
+    const isAnonymous = document.getElementById('anonymousCheck').checked;
+    const author = isAnonymous ? "طالب مجهول (مستعار)" : user.name;
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'addPost', post: { author, text } })
+    }).then(res => res.json()).then(data => {
+        alert(data.message);
+        document.getElementById('postText').value = '';
+        loadCommunityPosts();
+    });
+}
+
+function loadCommunityPosts() {
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getPosts' })
+    }).then(res => res.json()).then(data => {
+        if (data.status === 'success') {
+            let feed = document.getElementById('communityFeed');
+            feed.innerHTML = '';
+            data.posts.forEach(p => {
+                feed.innerHTML += `<div style="background:#f8fafc; padding:12px 16px; border-radius:10px; margin-bottom:10px; border-right:4px solid #0284c7;">
+                    <b>${p.author}</b> <span style="font-size:11px; color:#64748b; float:left;">${p.date}</span>
+                    <p style="margin:8px 0 0; font-size:14px;">${p.text}</p>
+                </div>`;
+            });
+        }
+    });
+}
 
 function createStudent() {
     const name = document.getElementById('newName').value;
@@ -79,9 +123,7 @@ function createStudent() {
     fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'addStudent', student: { code, name, phone, grade, pass } })
-    })
-    .then(res => res.json())
-    .then(data => {
+    }).then(res => res.json()).then(data => {
         alert(`${data.message}\nالكود: ${code}\nكلمة المرور: ${pass}`);
         loadStudentsList();
     });
@@ -91,9 +133,7 @@ function loadStudentsList() {
     fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'getStudents' })
-    })
-    .then(res => res.json())
-    .then(data => {
+    }).then(res => res.json()).then(data => {
         if(data.status === 'success') {
             let tbody = document.getElementById('studentsTableBody');
             tbody.innerHTML = '';
@@ -104,8 +144,8 @@ function loadStudentsList() {
                     <td>${st.phone}</td>
                     <td>${st.grade}</td>
                     <td><b>${st.status}</b></td>
-                    <td>${st.lastLogin || 'حديث'}</td>
-                    <td><button onclick="toggleBan('${st.code}', '${st.status === 'نشط' ? 'محظور' : 'نشط'}')" style="padding:6px 12px; background:${st.status === 'نشط' ? '#ef4444' : '#10b981'}">${st.status === 'نشط' ? 'حظر' : 'تفعيل'}</button></td>
+                    <td>${st.lastLogin || 'نشط'}</td>
+                    <td><button onclick="toggleBan('${st.code}', '${st.status === 'نشط' ? 'محظور' : 'نشط'}')" style="padding:5px 10px; background:${st.status === 'نشط' ? '#ef4444' : '#10b981'}">${st.status === 'نشط' ? 'حظر' : 'تفعيل'}</button></td>
                 </tr>`;
             });
         }
@@ -120,6 +160,18 @@ function toggleBan(code, newStatus) {
         alert(data.message);
         loadStudentsList();
     });
+}
+
+function saveSiteSettings() {
+    const siteTitle = document.getElementById('adminSiteTitle').value;
+    const primaryColor = document.getElementById('adminPrimaryColor').value;
+    const academicYear = document.getElementById('adminAcademicYear').value;
+    const developers = document.getElementById('adminDevelopers').value;
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'saveSettings', settings: { siteTitle, primaryColor, academicYear, developers } })
+    }).then(res => res.json()).then(data => alert(data.message));
 }
 
 function saveGeoSettings() {
@@ -147,28 +199,10 @@ function verifyAndRegisterGPS() {
                     attendance: { studentCode: user.code, studentName: user.name, subject, lat: position.coords.latitude, lng: position.coords.longitude }
                 })
             }).then(res => res.json()).then(data => alert(data.message));
-        }, () => alert("يرجى السماح بتحديد الموقع الجغرافي لتسجيل الحضور."));
+        }, () => alert("يرجى السماح بتحديد الموقع الجغرافي."));
     } else {
         alert("متصفحك لا يدعم خاصية تحديد الموقع.");
     }
-}
-
-function submitComplaint() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const text = document.getElementById('complaintText').value;
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'sendComplaint', complaint: { code: user.code, name: user.name, text } })
-    }).then(res => res.json()).then(data => alert(data.message));
-}
-
-function publishNotice() {
-    const title = document.getElementById('noticeTitle').value;
-    const message = document.getElementById('noticeMsg').value;
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'sendNotice', notice: { title, message } })
-    }).then(res => res.json()).then(data => alert(data.message));
 }
 
 function logout() {
