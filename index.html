@@ -2,42 +2,73 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة التعليم الإلكترونية لكلية الإعلام جامعة الأزهر</title>
+    <title>الملف الشخصي - منصة كلية الإعلام</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div style="flex:1;">
-        <div class="login-wrapper">
-            <!-- العنوان النصي المطلوب بدون صورة -->
-            <div class="login-title-box">
-                <h2>منصة التعليم الإلكترونية لكلية الإعلام</h2>
-                <p>جامعة الأزهر الشريف</p>
+    <header class="navbar">
+        <h3 style="margin:0; color:white;">منصة التعليم الإلكترونية - طالب</h3>
+        <button onclick="logout()">تسجيل الخروج</button>
+    </header>
+
+    <div class="app-container">
+        <!-- الملف الشخصي الفخم للطالب -->
+        <div class="profile-card">
+            <div>
+                <h2 id="displayName" style="margin:0; color:white;">اسم الطالب</h2>
+                <p style="margin:5px 0 0; color:#e0f2fe; font-size:14px;">الكود الجامعي: <span id="displayCode"></span> | الفرقة: <span id="displayGrade"></span></p>
             </div>
-            
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('student')">دخول الطالب</button>
-                <button class="tab-btn" onclick="switchTab('admin')">الإدارة</button>
+            <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 12px; font-weight: bold;">
+                الحالة: نشط ⭐
+            </div>
+        </div>
+
+        <div class="grid-cards">
+            <div class="card">
+                <h3>📚 مقرراتي الدراسية والكتب</h3>
+                <div id="coursesList">المقررات والكتب الدراسية الخاصة بفرقتك ستظهر هنا فور إضافتها من الأدمن.</div>
             </div>
 
-            <!-- نموذج دخول الطالب -->
-            <form id="studentLoginForm" onsubmit="handleStudentLogin(event)">
-                <input type="text" id="studentCode" placeholder="كود الطالب الجامعي" required>
-                <input type="password" id="studentPass" placeholder="كلمة المرور" required>
-                <button type="submit">تسجيل الدخول</button>
-            </form>
+            <div class="card">
+                <h3>📍 تسجيل الحضور (GPS الجغرافي)</h3>
+                <select id="attendanceSubject">
+                    <option value="الصحافة الإلكترونية">الصحافة الإلكترونية</option>
+                    <option value="الإذاعة والتلفزيون">الإذاعة والتلفزيون</option>
+                </select>
+                <input type="text" id="lectureSecret" placeholder="الكود السري للمحاضرة">
+                <button onclick="verifyAndRegisterGPS()">تثبيت الحضور بالاحداثيات الحالية</button>
+            </div>
+        </div>
 
-            <!-- نموذج دخول الأدمن -->
-            <form id="adminLoginForm" style="display:none;" onsubmit="handleAdminLogin(event)">
-                <input type="password" id="adminPass" placeholder="كلمة مرور الإدارة السرية" required>
-                <button type="submit">دخول لوحة التحكم</button>
-            </form>
+        <!-- منتدى النقاش الطلابي الشبيه بفيسبوك/واتساب -->
+        <div class="card" style="margin-bottom: 25px;">
+            <h3>💬 منتدى النقاش الطلابي (المجتمع الأكاديمي)</h3>
+            <div style="margin-bottom: 10px;">
+                <label><input type="checkbox" id="anonymousCheck"> النشر باسم مستعار (مجهول)</label>
+            </div>
+            <textarea id="postText" placeholder="شارك فكرة، سؤال، أو مناقشة مع زملائك في الكلية..."></textarea>
+            <button onclick="publishPost()">نشر في المنتدى</button>
+            <hr style="border:0; border-top:1px solid #e0f2fe; margin:20px 0;">
+            <div id="communityFeed">جاري تحميل منشورات الطلاب...</div>
+        </div>
+    </div>
+
+    <!-- بوت الشكاوى العائم في أقصى الشمال السفلي -->
+    <div class="chatbot-btn" onclick="toggleChatbot()">💬</div>
+    <div class="chatbot-modal" id="chatbotModal">
+        <div class="chatbot-header">
+            <span>مساعد الشكاوى والاستفسارات</span>
+            <span style="cursor:pointer;" onclick="toggleChatbot()">✕</span>
+        </div>
+        <div class="chatbot-body">
+            <p style="font-size: 13px; color:#64748b;">مرحباً بك! اكتب شكواك أو استفسارك وسيرسل فوراً إلى إدارة الكلية عبر السحابة:</p>
+            <textarea id="botComplaintText" placeholder="اكتب الشكوى هنا..." style="font-size:13px; padding:8px;"></textarea>
+            <button onclick="submitChatbotComplaint()" style="padding:8px; font-size:13px;">إرسال للإدارة</button>
         </div>
     </div>
 
     <footer>
-        <p>تم التنفيذ والتطوير بواسطة:</p>
-        <p class="developers">(أحمد سمير) &nbsp;|&nbsp; (عمار منصور)</p>
+        <p>تم التنفيذ والتطوير بواسطة: <span class="developers">(أحمد سمير) &nbsp;|&nbsp; (عمار منصور)</span></p>
     </footer>
 
     <script src="app.js"></script>
