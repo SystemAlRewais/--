@@ -7,35 +7,41 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <!-- شعار الكلية المصاحب للصورة -->
-        <img src="image.png" alt="شعار كلية الإعلام جامعة الأزهر" class="header-img">[span_0](start_span)[span_0](end_span)
-        
-        <h2>بوابة كلية الإعلام - جامعة الأزهر</h2>
-        
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('student')">دخول الطلاب</button>
-            <button class="tab-btn" onclick="switchTab('admin')">الإدارة</button>
+    <div style="flex: 1;">
+        <div class="login-wrapper">
+            <!-- شعار الكلية المصاحب للصورة -->
+            <img src="image.png" alt="شعار كلية الإعلام جامعة الأزهر" class="header-img">[span_0](start_span)[span_0](end_span)
+            
+            <h2>بوابة كلية الإعلام</h2>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">جامعة الأزهر الشريف - المنصة التعليمية الذكية</p>
+            
+            <div class="info-badge">
+                💡 <b>للاختبار السريع:</b> استخدم الكود: <code>admin</code> والباسورد: <code>5656</code>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('student')">تسجيل دخول الطالب</button>
+                <button class="tab-btn" onclick="switchTab('admin')">لوحة الإدارة</button>
+            </div>
+
+            <!-- نموذج دخول الطالب -->
+            <form id="studentLoginForm" onsubmit="handleStudentLogin(event)">
+                <input type="text" id="studentCode" placeholder="كود الطالب الجامعي" required>
+                <input type="password" id="studentPass" placeholder="كلمة المرور" required>
+                <button type="submit">دخول المنصة التعليمية</button>
+            </form>
+
+            <!-- نموذج دخول الأدمن (بدون إظهار الباسورد في الوجه) -->
+            <form id="adminLoginForm" style="display:none;" onsubmit="handleAdminLogin(event)">
+                <input type="password" id="adminPass" placeholder="أدخل كلمة مرور الإدارة السرية" required>
+                <button type="submit">الدخول للوحة التحكم المركزية</button>
+            </form>
         </div>
-
-        <!-- نموذج دخول الطالب -->
-        <form id="studentLoginForm" onsubmit="handleStudentLogin(event)">
-            <input type="text" id="studentCode" placeholder="كود الطالب" required>
-            <input type="password" id="studentPass" placeholder="كلمة المرور" required>
-            <button type="submit">تسجيل الدخول</button>
-        </form>
-
-        <!-- نموذج دخول الأدمن -->
-        <form id="adminLoginForm" style="display:none;" onsubmit="handleAdminLogin(event)">
-            <input type="password" id="adminPass" placeholder="كلمة مرور الإدارة (44554455)" required>
-            <button type="submit">دخول لوحة التحكم</button>
-        </form>
     </div>
 
-    <!-- التوقيع في أسفل الصفحة -->
     <footer>
         <p>تم التنفيذ والتطوير بواسطة كل من</p>
-        <p class="developers"><strong>(أحمد سمير)</strong> | <strong>(عمار منصور)</strong></p>
+        <p class="developers">(أحمد سمير) &nbsp;|&nbsp; (عمار منصور)</p>
     </footer>
 
     <script src="app.js"></script>
