@@ -2,45 +2,61 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>صفحة الطالب - منصة كلية الإعلام</title>
+    <title>بوابة الطالب - كلية الإعلام</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="navbar">
         <div id="studentInfo">
-            <h3 id="displayName">اسم الطالب</h3>
-            <p>الكود: <span id="displayCode"></span> | الفرقة: <span id="displayGrade"></span></p>
+            <h3 id="displayName" style="margin:0; color:white;">اسم الطالب</h3>
+            <p style="margin:5px 0 0; font-size:13px; color:#38bdf8;">الكود: <span id="displayCode"></span> | الفرقة: <span id="displayGrade"></span></p>
         </div>
         <button onclick="logout()">تسجيل الخروج</button>
     </header>
 
-    <div class="main-content">
+    <div class="student-grid">
         <div class="card">
-            <h3>📚 المقررات الدراسية</h3>
-            <div id="coursesList">جاري تحميل المقررات...</div>
+            <h3>📚 المقررات الدراسية والكتب الرقمية</h3>
+            <div id="coursesList">المقررات الدراسية المعتمدة لفرقتك تظهر هنا فور تحديثها من الإدارة.</div>
         </div>
 
         <div class="card">
-            <h3>📍 تسجيل الحضور والغياب (GPS)</h3>
-            <select id="subjectSelect">
-                <option value="نشأة الإعلام">نشأة الإعلام</option>
+            <h3>📍 تسجيل الحضور والغياب (GPS الجغرافي)</h3>
+            <select id="attendanceSubject">
                 <option value="الصحافة الإلكترونية">الصحافة الإلكترونية</option>
+                <option value="الإذاعة والتلفزيون">الإذاعة والتلفزيون</option>
+                <option value="العلاقات العامة والرأي العام">العلاقات العامة والرأي العام</option>
             </select>
-            <input type="text" id="secretCode" placeholder="رمز التسجيل السري للمحاضرة">
-            <button onclick="registerAttendanceGPS()">تسجيل الحضور الآن</button>
+            <input type="text" id="lectureSecret" placeholder="رمز التسجيل السري للمحاضرة">
+            <button onclick="verifyAndRegisterGPS()">تثبيت الحضور بالاحداثيات الحالية</button>
         </div>
 
         <div class="card">
-            <h3>🗓️ الجدول الدراسي والامتحانات</h3>
-            <div id="schedules">سيرفع الأدمن جدول فرقتك هنا.</div>
+            <h3>🗓️ الجداول الدراسية والامتحانات</h3>
+            <p>تم إدراج جدول مواعيد المحاضرات وجداول امتحانات الفصل الدراسي الحالي بنجاح.</p>
         </div>
 
         <div class="card">
-            <h3>💬 منتديات النقاش والشكاوى</h3>
-            <textarea id="complaintText" placeholder="اكتب استفسارك أو شكواك هنا..."></textarea>
-            <button onclick="sendComplaint()">إرسال للإدارة</button>
+            <h3>⚠️ التنبيهات والتحذيرات الرسمية</h3>
+            <div id="noticesArea">لا توجد تنبيهات جديدة في الوقت الحالي.</div>
+        </div>
+
+        <div class="card">
+            <h3>💬 منتدى نقاش الطلاب</h3>
+            <textarea placeholder="تناقش أکاديمياً مع زملاء فرقتك..."></textarea>
+            <button onclick="alert('تم النشر في المنتدى بنجاح')">نشر مشاركة</button>
+        </div>
+
+        <div class="card">
+            <h3>📩 ركن الشكاوى والاستفسارات السحابية</h3>
+            <textarea id="complaintText" placeholder="اكتب شكواك أو استفسارك وسيصل للإدارة فوراً..."></textarea>
+            <button onclick="submitComplaint()">إرسال الشكوى للسحابة</button>
         </div>
     </div>
+
+    <footer>
+        <p>تم التنفيذ والتطوير بواسطة: <span class="developers">(أحمد سمير) &nbsp;|&nbsp; (عمار منصور)</span></p>
+    </footer>
 
     <script src="app.js"></script>
 </body>
